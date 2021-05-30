@@ -20,33 +20,27 @@ import { Elementary } from "./elementary";
  *  0	1	1	0	1	1	1	0	new state for center cell	N110d=(C+R+C*R+L*C*R)%2
  */
 
-
 export class ElementaryConfig {
-    /*** This is the 8 possible states a cell can take from its three neighbours, keep them in a immutable ladder to be used for rule indexing later * */
-    readonly neighbourRules: Array<number>; // [7, 6, 5, 4, 3, 2, 1, 0]
+    readonly neighbourRules: Array<number>; /*** This is the 8 possible states a cell can take from its three neighbours, keep them in a immutable ladder to be used for rule indexing later */
+    ruleset: Array<number>;   /*** This is the current ruleset, indicating how the next generation should choose its value according to the current state of the cell and its two immediate neighbors */
 
-    /*** This is the current ruleset, indicating how the next generation should choose its value according to the current state of the cell and its two immediate neighbors */
-    ruleset: Array<number>;
+    width: number;   /** Grid width */
+    generations: number;    /** Amount of generations to simulate */
 
-    /** Amount of generations to simulate */
-    generations: number;
-
-    /** Grid width */
-    width: number;
-
+    ratio: boolean; // If true - Calculate cellsize to fill window width
     cellsize: number;
     cellcolorOff: string;
     cellcolorOn: string;
-    ratio: boolean; // If true - Calculate cellsize to fill window width
 };
 
 export const elementaryConfig: ElementaryConfig = {
     neighbourRules: [7, 6, 5, 4, 3, 2, 1, 0],
     ruleset: [0, 0, 0, 1, 1, 1, 1, 0], // Rule 30
+
     generations: 1000,
+    cellsize: 8,
     width: 100,
 
-    cellsize: 8,
     ratio: false,
     cellcolorOff: 'rgb(132, 208, 212)',
     cellcolorOn: 'rgb(87, 91, 107)',

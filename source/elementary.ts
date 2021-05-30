@@ -14,7 +14,7 @@ export class Elementary {
     }
 
     /**
-     * Animate the step colculation, run untill specified amount of generation years has passed.
+     * Animate the step colculation, run untill specified amount of generations has passed.
     * TODO. Does call requestAnimationFrame, add option to throttle framerate and draw incremental generation changes.
      */
     animate(onSuccess: (generations: Array<Array<number>>) => void) {
@@ -35,7 +35,7 @@ export class Elementary {
     }
 
     /** 
-    * Perform a step, ie calulcate one generation.
+    * Perform a step, calculate one generation.
     */
     step(): number[] {
         const nextgrid: number[] = [];

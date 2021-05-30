@@ -54,10 +54,15 @@ export class Display {
         canvas.width = crect.width * devicepixelratio;
         canvas.height = crect.height * devicepixelratio;
         ctx.scale(devicepixelratio, devicepixelratio);
+
         ctx.imageSmoothingEnabled = false;
 
         if (id) { canvas.id = id; }
         canvascontainer.appendChild(canvas);
-        return { canvas: canvas, context: ctx };
+
+        return { 
+            canvas: canvas, 
+            context: ctx 
+        };
     }
 }
