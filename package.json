@@ -1,0 +1,35 @@
+{
+  "name": "gnorp",
+  "version": "0.0.1",
+  "description": "Yet another useless thing",
+  "main": "battleship.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npx ts-node ./source/server/main.ts",
+    "local-enviro": "npm run build && http-server -o",
+    "build": "webpack --config ./webpack/webpack.config.dev.js",
+    "prod": "webpack --config ./webpack/webpack.config.prod.js"
+  },
+  "keywords": [
+    "webquail",
+    "typescript",
+    "game"
+  ],
+  "author": "MartinDC",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "12.7.8",
+    "@types/axios": "0.14.0",
+    "@types/ws": "6.0.3",
+    "axios": "0.19.0",
+    "ws": "7.1.2"
+  },
+  "devDependencies": {
+    "ts-loader": "6.2.2",
+    "ts-node": "8.8.1",
+    "typescript": "3.8.3",
+    "webpack": "4.41.0",
+    "webpack-cli": "3.3.9",
+    "webpack-merge": "4.2.2"
+  }
+}

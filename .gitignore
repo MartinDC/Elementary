@@ -1,0 +1,84 @@
+# Tell git to ignore the following files: #
+# Adapted from:                           #
+# https://gist.github.com/octocat/9257657 #
+# # # # # # # # # # # # # # # # # # # # # #
+
+###########################################
+#
+# Compiled source
+#
+###########################################
+
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.a
+*.obj
+*.so
+
+###########################################
+#
+# Packages #
+#
+###########################################
+
+*.7z
+*.dmg
+*.gz
+*.jar
+*.rar
+*.tar
+*.zip
+
+###########################################
+#
+# Logs and databases #
+#
+###########################################
+
+*.log
+*.sql
+*.sqlite
+*.db
+
+###########################################
+#
+# OS generated files #
+#
+###########################################
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+hthumbs.db
+Thumbs.db
+
+###########################################
+#
+# Project specific files and directories
+#
+###########################################
+
+cmake_Install.cmake
+CMakeCache.txt
+
+SimpleISO
+Makefile
+
+node_modules/
+CMakeFiles/
+dist/
+deps/
+
+build/
+build/main.js
+
+###########################################
+#
+# End of git ignore
+#
+###########################################

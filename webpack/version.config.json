@@ -1,0 +1,8 @@
+{
+	"VERSION_MAJOR" 	: 0,
+	"VERSION_MINOR" 	: 0,
+	"VERSION_DEVBUILD" 	: 1,
+	
+	"VERSION_POSTFIX" 	: ".",
+	"VERSION_TYPE" 		: "Official/release"
+}
