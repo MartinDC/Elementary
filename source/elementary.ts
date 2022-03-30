@@ -27,7 +27,7 @@ export class Elementary {
             this.generations.push(this.step());
 
             let nextGeneration = this.generations.length < this.elementaryconfig.generations;
-            if (nextGeneration) { return window.requestAnimationFrame(tick); }
+            if (nextGeneration) { window.requestAnimationFrame(tick); }
             onSuccess(this.generations);
         };
 
@@ -39,7 +39,7 @@ export class Elementary {
     */
     step(): number[] {
         const nextgrid: number[] = [];
-        this.grid.forEach((cell, gridcell) => {
+        this.grid.forEach((_, gridcell) => {
             const n = this.neighbours(gridcell);
             if (!n && n < 0) { throw `Illegal state: ${gridcell}`; }
             nextgrid[gridcell] = this.rule(n);
@@ -54,11 +54,11 @@ export class Elementary {
     neighbours(cell: number) {
         if (cell < 0 || cell > this.elementaryconfig.width) { return 0; }
 
-        const r = this.grid[cell + 1 > this.elementaryconfig.width ? 0 : cell + 1];
-        const l = this.grid[cell - 1 < 0 ? 0 : cell - 1];
+        const r = this.grid[cell + 1 >= this.elementaryconfig.width ? 0 : cell + 1];
+        const l = this.grid[cell - 1 <= 0 ? 0 : cell - 1];
         return 0xf & (r << 2 | this.grid[cell] << 1 | l);
     }
-    
+
     rule(index: number) {
         var nextrule = this.elementaryconfig.neighbourRules[index];
         return this.elementaryconfig.ruleset[(nextrule - 7) % 7 + 7];
@@ -70,5 +70,11 @@ export class Elementary {
 
     currentGeneration() {
         return this.generations.slice(-1)[0];
+    }
+
+    changeRuleset(rdecimal: number) {
+        const dtob = (n: number) => { return rdecimal >> n & 0x1; }
+        this.elementaryconfig.ruleset = [dtob(7), dtob(6), dtob(5), dtob(4), dtob(3), dtob(2), dtob(1), dtob(0)];
+        return this;
     }
 }

@@ -1,4 +1,5 @@
 import { Display } from "./display";
+import { ElementaryDom } from "./dom";
 import { Elementary } from "./elementary";
 
 /**
@@ -38,24 +39,27 @@ export const elementaryConfig: ElementaryConfig = {
     ruleset: [0, 0, 0, 1, 1, 1, 1, 0], // Rule 30
 
     generations: 1000,
-    cellsize: 8,
-    width: 100,
+    cellsize: 5,
+    width: 1000,
 
-    ratio: false,
+    ratio: true,
     cellcolorOff: 'rgb(132, 208, 212)',
     cellcolorOn: 'rgb(87, 91, 107)',
 };
 
 export class ElementaryMain {
+    private elementaryDom: ElementaryDom = new ElementaryDom();
     private display: Display = new Display();
 
     runSimulation(config?: ElementaryConfig) {
         const defaultConfig = config || elementaryConfig;
         const elementary = new Elementary().bootstrapApplication(defaultConfig);
-        this.display.init(defaultConfig);
 
-        elementary.animate((generations) => {
-            this.display.render(generations);
+        this.elementaryDom.renderSelectionPrompts((rule) => {
+            this.display.init(defaultConfig);
+            elementary.changeRuleset(rule).animate((generations) => {
+                this.display.render(generations);
+            });
         });
     }
 }

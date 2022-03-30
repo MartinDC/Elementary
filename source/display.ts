@@ -25,19 +25,14 @@ export class Display {
         const gridwidth = this.elementaryconfig.width;
         const configsize = this.elementaryconfig.cellsize;
 
-        let cellw= ratio ? this.canvas.width / gridwidth : configsize;
+        let cellw = ratio ? this.canvas.width / gridwidth : configsize;
         let cellh = ratio ? this.canvas.width / gridwidth : configsize;
 
-        this.context.translate(0.5, 0.5);
+        //this.context.translate(0.5, 0.5);
 
         generations.forEach((gen, year) => {
             gen.forEach((cell, gridcell) => {
-                if (cell) {
-                    this.context.fillStyle = this.elementaryconfig.cellcolorOn;
-                } else {
-                    this.context.fillStyle = this.elementaryconfig.cellcolorOff;
-                }
-
+                this.context.fillStyle = cell ? this.elementaryconfig.cellcolorOn : this.elementaryconfig.cellcolorOff;
                 this.context.fillRect(gridcell * cellw, year * cellh, cellw, cellh);
             });
         });
@@ -60,9 +55,9 @@ export class Display {
         if (id) { canvas.id = id; }
         canvascontainer.appendChild(canvas);
 
-        return { 
-            canvas: canvas, 
-            context: ctx 
+        return {
+            canvas: canvas,
+            context: ctx
         };
     }
 }
