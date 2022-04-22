@@ -22,16 +22,17 @@ import { Elementary } from "./elementary";
  */
 
 export class ElementaryConfig {
-    readonly neighbourRules: Array<number>; /*** This is the 8 possible states a cell can take from its three neighbours, keep them in a immutable ladder to be used for rule indexing later */
-    ruleset: Array<number>;   /*** This is the current ruleset, indicating how the next generation should choose its value according to the current state of the cell and its two immediate neighbors */
+    readonly neighbourRules: Array<number>; // This is the 8 possible states a cell can take from its three neighbours, keep them in a immutable ladder to be used for rule indexing later
+    ruleset: Array<number>;   // This is the current ruleset, indicating how the next generation should choose its value according to the current state of the cell and its two immediate neighbors
 
-    width: number;   /** Grid width */
-    generations: number;    /** Amount of generations to simulate */
+    container: string;      // Marker element where Elementary will generate it's view (prompt and canvas)
+    generations: number;    // Amount of generations to simulate
+    width: number;          // Grid width 
 
-    ratio: boolean; // If true - Calculate cellsize to fill window width
-    cellsize: number;
-    cellcolorOff: string;
-    cellcolorOn: string;
+    ratio: boolean;         // If true - Calculate cellsize to fill window width
+    cellsize: number;       // This is the size of a single cell
+    cellcolorOff: string;   // color for state off - this should be a color valid in CSS (ex 'rgb(132, 208, 212)')
+    cellcolorOn: string;    // color for state on - this should be a color valid in CSS (ex 'rgb(87, 91, 107)')
 };
 
 export const elementaryConfig: ElementaryConfig = {
@@ -41,8 +42,9 @@ export const elementaryConfig: ElementaryConfig = {
     generations: 1000,
     cellsize: 5,
     width: 1000,
-
+    
     ratio: true,
+    container: '#elementary-container',
     cellcolorOff: 'rgb(132, 208, 212)',
     cellcolorOn: 'rgb(87, 91, 107)',
 };

@@ -1,12 +1,9 @@
 {
-  "name": "gnorp",
+  "name": "elementary",
   "version": "0.0.1",
-  "description": "Yet another useless thing",
-  "main": "battleship.ts",
+  "description": "Simple Elementary cellular automata",
+  "main": "main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "npx ts-node ./source/server/main.ts",
-    "local-enviro": "npm run build && http-server -o",
     "build": "webpack --config ./webpack/webpack.config.dev.js",
     "prod": "webpack --config ./webpack/webpack.config.prod.js"
   },
@@ -16,14 +13,21 @@
     "game"
   ],
   "author": "MartinDC",
+  "homepage": "https://github.com/MartinDC/Elementary",
   "license": "ISC",
-  "dependencies": {
-    "@types/node": "12.7.8",
-    "@types/axios": "0.14.0",
-    "@types/ws": "6.0.3",
-    "axios": "0.19.0",
-    "ws": "7.1.2"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MartinDC/Elementary.git"
   },
+  "bugs": {
+    "url": "https://github.com/MartinDC/Elementary/issues"
+  },
+  "contributors": [
+    {
+      "name": "Martin Cserhalmi",
+      "email": "martin.cserhalmi@gmail.com"
+    }
+  ],
   "devDependencies": {
     "ts-loader": "6.2.2",
     "ts-node": "8.8.1",

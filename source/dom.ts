@@ -19,7 +19,7 @@ declare type ElementaryElement = {
 
 export class ElementaryDom {
     renderSelectionPrompts(selection: (v: number) => void) {
-        const selectionContainer = elementaryElementFactory.with(document).byClass('selection-container').element;
+        const selectionContainer = elementaryElementFactory.with(document).byId('selection-view').element;
         const gameContainer = elementaryElementFactory.with(document).byId('game-view').element;
         if (!selectionContainer) { throw 'Failed to load selection selectionContainer - this is a fatal error'; }
 
@@ -43,8 +43,8 @@ export class ElementaryDom {
     }
 
     buildElements(context: DocumentFragment) : HTMLElement[] {
-        const ruleInputContainer = elementaryElementFactory.with(context).make('div').css('rule-card').element;
-        const inputPrompt = elementaryElementFactory.with(ruleInputContainer).make('input').attr({ 'type': 'text' }).css('rule-card').element;
+        const ruleInputContainer = elementaryElementFactory.with(context).make('div').css('rule-card', 'pt-normal').element;
+        const inputPrompt = elementaryElementFactory.with(ruleInputContainer).make('input').attr({ 'type': 'text' }).css('rule-input').element;
         const submitButton = elementaryElementFactory.with(ruleInputContainer).make('button').attr({ 'type': 'button' }).css('rule-btn').text('Go!').element;
         const notifier = elementaryElementFactory.with(ruleInputContainer).make('small').css('rule-notification', 'd-block', 'display-none').text('Please input a value between 0 and 255').element;
         

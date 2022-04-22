@@ -11,10 +11,10 @@ export class Display {
         if (!id) { id = 'game-canvas'; }
 
         this.elementaryconfig = config;
-
-        const rendercontext = this.createHDPICanvasElement(container, id);
-        this.context = rendercontext.context;
-        this.canvas = rendercontext.canvas;
+        
+        const [canvas, context] = this.createHDPICanvasElement(container, id);
+        this.context = context;
+        this.canvas = canvas;
     }
 
     public render(generations: Array<Array<number>>) {
@@ -28,8 +28,6 @@ export class Display {
         let cellw = ratio ? this.canvas.width / gridwidth : configsize;
         let cellh = ratio ? this.canvas.width / gridwidth : configsize;
 
-        //this.context.translate(0.5, 0.5);
-
         generations.forEach((gen, year) => {
             gen.forEach((cell, gridcell) => {
                 this.context.fillStyle = cell ? this.elementaryconfig.cellcolorOn : this.elementaryconfig.cellcolorOff;
@@ -38,7 +36,7 @@ export class Display {
         });
     }
 
-    private createHDPICanvasElement(container: string, id: string = undefined): { canvas: HTMLCanvasElement, context: CanvasRenderingContext2D } {
+    private createHDPICanvasElement(container: string, id: string = undefined): [HTMLCanvasElement, CanvasRenderingContext2D] {
         const canvascontainer = document.getElementById(container);
         const canvas = document.createElement('canvas') as HTMLCanvasElement;
         let ctx = canvas.getContext('2d');
@@ -49,15 +47,12 @@ export class Display {
         canvas.width = crect.width * devicepixelratio;
         canvas.height = crect.height * devicepixelratio;
         ctx.scale(devicepixelratio, devicepixelratio);
+        ctx.translate(0.5, 0.5);
 
         ctx.imageSmoothingEnabled = false;
 
         if (id) { canvas.id = id; }
         canvascontainer.appendChild(canvas);
-
-        return {
-            canvas: canvas,
-            context: ctx
-        };
+        return [canvas, ctx];
     }
 }

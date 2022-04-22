@@ -133,3 +133,5 @@ canvas {
 .d-block { display: block; }
 .p-relative { position: relative; }
 .p-absolute { position: absolute; }
+
+.pt-normal { padding-top: 20px; }
