@@ -44,4 +44,9 @@ You can **optionally** pass a config as a parameter to runSimulation. Here you c
 };
 ```
 
-#What does it do?
+# Authors notes
+
+Im happy to see that you like these simple yet complex patterns aswell!
+They are actually really simple to draw, the logic behind it is not complex at all.
+
+

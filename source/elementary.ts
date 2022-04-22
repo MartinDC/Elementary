@@ -27,7 +27,7 @@ export class Elementary {
 
             let nextGeneration = this.generations.length < this.elementaryconfig.generations;
             if (nextGeneration) { window.requestAnimationFrame(tick); }
-            onSuccess(this.generations.slice(-1));
+            onSuccess(this.generations);
         };
 
         window.requestAnimationFrame(tick);
