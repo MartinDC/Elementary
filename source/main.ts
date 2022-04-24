@@ -39,9 +39,9 @@ export const elementaryConfig: ElementaryConfig = {
     neighbourRules: [7, 6, 5, 4, 3, 2, 1, 0],
     ruleset: [0, 0, 0, 1, 1, 1, 1, 0], // Rule 30
 
-    generations: 1000,
+    generations: 200,
     cellsize: 5,
-    width: 1000,
+    width: 200,
     
     ratio: true,
     container: '#elementary-container',
