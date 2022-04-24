@@ -9,7 +9,7 @@
 
 #### Elementary is a viewer for [Elementary cellular automaton](https://en.wikipedia.org/wiki/Elementary_cellular_automaton) focusing on **simplicity** and **maintainability**. Trying to fill a gap of easy to grasp and use solutions.
 
-## [Run the simulation in your browser](https://en.wikipedia.org/wiki/Elementary_cellular_automaton)
+#### [Run the simulation in your browser](https://martindc.github.io/Elementary/)
 
 # Install
 The simplest way to install this is by using npm.
