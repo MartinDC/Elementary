@@ -50,5 +50,5 @@ You can **optionally** pass a config as a parameter to runSimulation. Here you c
 I always been fascinated by the 'alive' nature presented by automatons and as such i wanted to investigate them further and made this.
 The project is still in a very early state though, and much of it is only a thought in my head.
 
-**BUT** - The image generation does work, so feel free to use it as you like!
-And if you are just starting out you can probably learn something from it :)
+**BUT** - The image generation does work, so feel free to use it as you like.
+And if you are just starting out you can probably learn something from it!
