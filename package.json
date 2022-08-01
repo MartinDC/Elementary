@@ -2,7 +2,7 @@
   "name": "elementary",
   "version": "0.0.1",
   "description": "Simple Elementary cellular automata",
-  "main": "main.ts",
+  "main": "app.ts",
   "scripts": {
     "build": "webpack --config ./webpack/webpack.config.dev.js",
     "prod": "webpack --config ./webpack/webpack.config.prod.js"

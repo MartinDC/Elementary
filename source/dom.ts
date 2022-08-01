@@ -1,7 +1,3 @@
-declare type ElementaryKeyValue = {
-    key: string, value: string
-}
-
 declare type ElementaryElement = {
     context: DocumentFragment | HTMLElement,
     element: HTMLElement,
@@ -30,8 +26,8 @@ export class ElementaryDom {
             submit.addEventListener('click', () => {
                 const rule = parseInt((input as HTMLInputElement).value);
                 if (rule >= 0 && rule < Math.pow(2, 8)) {
-                    container.classList.add('display-none');
                     gameContainer.classList.remove('display-none');
+                    container.classList.add('display-none');
                     return selection(rule);
                 }
 
@@ -54,7 +50,6 @@ export class ElementaryDom {
     }
 }
 
-// TODO this is in a horrible state
 const elementaryElementFactory: ElementaryElement = {
     context: undefined,
     element: undefined,

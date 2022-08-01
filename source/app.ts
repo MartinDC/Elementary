@@ -1,4 +1,5 @@
-import { Display } from "./display";
+import * as asciiCfg from "../data/main.json";
+import { ElementaryDisplay } from "./display";
 import { ElementaryDom } from "./dom";
 import { Elementary } from "./elementary";
 
@@ -23,7 +24,6 @@ import { Elementary } from "./elementary";
 
 export class ElementaryConfig {
     readonly neighbourRules: Array<number>; // This is the 8 possible states a cell can take from its three neighbours, keep them in a immutable ladder to be used for rule indexing later
-    ruleset: Array<number>;   // This is the current ruleset, indicating how the next generation should choose its value according to the current state of the cell and its two immediate neighbors
 
     container: string;      // Marker element where Elementary will generate it's view (prompt and canvas)
     generations: number;    // Amount of generations to simulate
@@ -37,33 +37,69 @@ export class ElementaryConfig {
 
 export const elementaryConfig: ElementaryConfig = {
     neighbourRules: [7, 6, 5, 4, 3, 2, 1, 0],
-    ruleset: [0, 0, 0, 1, 1, 1, 1, 0], // Rule 30
 
     generations: 1000,
-    cellsize: 5,
+    cellsize: 1,
     width: 1000,
-    
-    ratio: true,
+
+    ratio: false,
     container: '#elementary-container',
-    cellcolorOff: 'rgb(132, 208, 212)',
-    cellcolorOn: 'rgb(87, 91, 107)',
+    cellcolorOff: '#84d0d4',
+    cellcolorOn: '#575b6b',
 };
 
-export class ElementaryMain {
-    private elementaryDom: ElementaryDom = new ElementaryDom();
-    private display: Display = new Display();
+declare type ASCIISplashItem = { ending: string; color: string; art: string; };
+declare type ASCIIData = Partial<{ entryAscii: ASCIISplashItem }>
 
-    runSimulation(config?: ElementaryConfig) {
-        const defaultConfig = config || elementaryConfig;
+class SimpleASCIISplasher {
+    constructor(private ascii: ASCIISplashItem) { return this; }
+    splash() { console.info(this.ascii.art, this.ascii.color, this.ascii.ending); }
+}
+
+// TODO: Random seeds, UI and pixel perfect rendering with scroll
+
+export class ElementaryApp {
+    private elementaryDom: ElementaryDom = new ElementaryDom();
+    private display: ElementaryDisplay = new ElementaryDisplay();
+    private config: ElementaryConfig = elementaryConfig;
+
+    /** 
+     * This function is used to supply a user config. 
+     * If no config is specified the default will be used 
+     * */
+    withConfig(config: ElementaryConfig) {
+        if (!config && !elementaryConfig) {
+            throw `${this.constructor.name} - A default or user config must be present`;
+        }
+        this.config = config || elementaryConfig;
+        return this;
+    }
+    
+    /** 
+     * Display a 'MOTD' style message in the browser console. 
+     * The art is defined in data/main.json. 
+     * */
+    withSplash(ascii: ASCIISplashItem) {
+        if (!ascii || !ascii.art) {
+            throw `${this.constructor.name} - Could not find splash  data`;
+        }
+        new SimpleASCIISplasher(ascii).splash();
+        return this;
+    }
+
+    run() {
+        const defaultConfig = this.config || elementaryConfig;
         const elementary = new Elementary().bootstrapApplication(defaultConfig);
 
         this.elementaryDom.renderSelectionPrompts((rule) => {
             this.display.init(defaultConfig);
-            elementary.changeRuleset(rule).animate((generations) => {
-                this.display.render(generations);
+            elementary.changeRuleset(rule).animate((generations, year) => {
+                this.display.render(generations, year);
             });
         });
     }
 }
 
-new ElementaryMain().runSimulation();
+// API - how to run example
+new ElementaryApp().withSplash((<ASCIIData>asciiCfg).entryAscii)
+    .withConfig(elementaryConfig).run();

@@ -1,70 +1,83 @@
-import { ElementaryConfig } from "./main";
+import { ElementaryBuffer } from "./buffer";
+import { ElementaryConfig } from "./app";
+
+export enum AnimationStyle {
+    Stepwise = 0,
+    Direct = 1
+}
 
 export class Elementary {
-    private elementaryconfig: ElementaryConfig
-    private generations: Array<Array<number>>;
-    private grid: Array<number>;
+    private elementaryConfig: ElementaryConfig
+    private generationBuffer: ElementaryBuffer;
+    private animationStyle: AnimationStyle;
 
-    bootstrapApplication(config: ElementaryConfig): Elementary {
-        this.elementaryconfig = config;
+    /** 
+     *  This is the current ruleset, indicating how the next generation should choose its value according to the current state
+     *  of the cell and its two immediate neighbors
+    */
+    private ruleset: Array<number>;
 
-        this.generations = new Array<Array<number>>();
-        this.grid = new Array<number>();
+    bootstrapApplication(config: ElementaryConfig, animationStyle: AnimationStyle = AnimationStyle.Stepwise): Elementary {
+        this.generationBuffer = new ElementaryBuffer(config.width, config.generations);
+        this.animationStyle = animationStyle;
+        this.ruleset = new Array<number>(8);
+        this.elementaryConfig = config;
         return this;
     }
 
     /**
      * Animate the step colculation, run untill specified amount of generations has passed.
      */
-    animate(onSuccess: (generations: Array<Array<number>>) => void) {
-        const firstgen = new Array<number>(this.elementaryconfig.generations).fill(0, 0, this.elementaryconfig.width);
-        firstgen.fill(1, this.elementaryconfig.width / 2, this.elementaryconfig.width / 2 + 1);
-        this.generations.push(firstgen);
-
+    animate(onSuccess: (generations: Uint8Array, year: number) => void) {
         const tick = () => {
-            this.grid = this.currentGeneration();
-            this.generations.push(this.step());
-
-            let nextGeneration = this.generations.length < this.elementaryconfig.generations;
+            const grid = this.step(this.currentGeneration());
+            let nextGeneration = this.generationBuffer.age < this.elementaryConfig.generations - 1;
             if (nextGeneration) { window.requestAnimationFrame(tick); }
-            onSuccess(this.generations);
+            if (this.animationStyle === AnimationStyle.Stepwise) {
+                onSuccess(grid, this.generationBuffer.age);
+            }
         };
 
         window.requestAnimationFrame(tick);
+        if (this.animationStyle === AnimationStyle.Direct) {
+            onSuccess(this.generationBuffer.buffer, this.elementaryConfig.generations);
+        }
     }
 
     /** 
     * Perform a step, calculate one generation.
+    * @param currentGeneratingGrid  The row in the generation currently beeing generated
     */
-    step(): number[] {
-        const nextgrid: number[] = [];
-        this.grid.forEach((_, gridcell) => {
-            const n = this.neighbours(gridcell);
+    step(currentGeneratingGrid: Uint8Array): Uint8Array {
+        const year = this.generationBuffer.age + 1;
+        for (let gridcell = 0; gridcell < this.elementaryConfig.width; gridcell++) {
+            const n = this.neighbours(currentGeneratingGrid, gridcell);
             if (!n && n < 0) { throw `Illegal state: ${gridcell}`; }
-            nextgrid[gridcell] = this.rule(n);
-        });
-
-        return nextgrid;
+            
+            this.generationBuffer.set(year, gridcell, this.rule(n));
+        }
+        return currentGeneratingGrid;
     }
 
     /** 
     * Get the neighbourRules-index calculated from the neighbours of the cell currently beeing visisted.
+    * @param currentGeneratingGrid  The row in the generation currently beeing generated
      */
-    neighbours(cell: number) {
-        if (cell < 0 || cell > this.elementaryconfig.width) { return 0; }
+    neighbours(currentGeneratingGrid: Uint8Array, cell: number) {
+        if (cell < 0 || cell > this.elementaryConfig.width) { return 0; }
 
-        const r = this.grid[cell + 1 >= this.elementaryconfig.width ? 0 : cell + 1];
-        const l = this.grid[cell - 1 <= 0 ? 0 : cell - 1];
-        return 0xf & (r << 2 | this.grid[cell] << 1 | l);
+        const r = currentGeneratingGrid[cell + 1 >= this.elementaryConfig.width ? 0 : cell + 1];
+        const l = currentGeneratingGrid[cell - 1 <= 0 ? 0 : cell - 1];
+        return 0xf & (r << 2 | currentGeneratingGrid[cell] << 1 | l);
     }
 
-    rule(index: number) { return this.elementaryconfig.ruleset[this.elementaryconfig.neighbourRules[index]]; }
-    currentGeneration() { return this.generations.slice(-1)[0]; }
-    generation(year?: number) { return this.generations[year]; }
+    rule(index: number) { return this.ruleset[this.elementaryConfig.neighbourRules[index]]; }
+    generation(year?: number) { return this.generationBuffer.generation(year); }
+    currentGeneration() { return this.generationBuffer.currentGeneration(); }
 
     changeRuleset(rdecimal: number) {
         const dtob = (n: number) => { return rdecimal >> n & 0x1; }
-        this.elementaryconfig.ruleset = [dtob(7), dtob(6), dtob(5), dtob(4), dtob(3), dtob(2), dtob(1), dtob(0)];
+        this.ruleset = [dtob(7), dtob(6), dtob(5), dtob(4), dtob(3), dtob(2), dtob(1), dtob(0)];
         return this;
     }
 }
