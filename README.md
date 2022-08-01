@@ -12,7 +12,7 @@
 #### [Run the simulation in your browser](https://martindc.github.io/Elementary/)
 
 # Install
-The simplest way to play with the sample is through Github. Download or clone this repository and make sure that you have **npm** installed, then go to the root directory (where the **package.json** lives) and run `npm install`. This should download typescript and all other dependencies that are needed for the application to build. Open `index.html` in any evergreen browser and you should be all setup.
+The simplest way to play with the sample is through Github. Download or clone this repository and make sure that you have **npm** installed, thengo to the root directory (where the **package.json** lives) and run `npm install`. This should download typescript and all other dependencies that are needed for the application to build. Open `index.html` in any evergreen browser and you should be all setup.
 
 # Usage
 The API is **simple** - one line of code and one lines of HTML should render the automaton for you.
@@ -47,8 +47,8 @@ You can **optionally** pass a config as a parameter to runSimulation. Here you c
 ```
 
 # Words from the author
-I always been fascinated by the 'alive' nature presented by automatons and as such i wanted to investigate them further and made this.
-The project is still in a very early state though, and much of it is only a thought in my head.
+I always been fascinated by the 'alive' nature presented by automatons and as such i wanted to investigate them further. And voila! Elementary was born.
+With that said; the project is still in a very early state and much of it is only a thought in my head at this time.
 
 **BUT** - The image generation does work, so feel free to use it as you like.
 And if you are just starting out you can probably learn something from it!
