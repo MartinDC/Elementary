@@ -32,7 +32,7 @@ As the config is optional to give the default is 'selection-view'.
 ```
 
 ### Config
-You can **optionally** pass a config as a parameter to runSimulation. Here you can control things like generations and style.
+You can **optionally** pass a config to Elementary by using the chainable function **withConfig(elementaryConfig)**. Here you control things like generations and style.
 
 ```ts
 {
