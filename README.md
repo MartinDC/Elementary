@@ -48,7 +48,7 @@ You can **optionally** pass a config as a parameter to runSimulation. Here you c
 
 # Words from the author
 I always been fascinated by the 'alive' nature presented by automatons and as such i wanted to investigate them further. And voila! Elementary was born.
-With that said; the project is still in a very early state and much of it is only a thought in my head at this time.
 
-**BUT** - The image generation does work, so feel free to use it as you like.
+With that said, the project is still in a very early state and much of it is only a thought in my head at this time.
+But The image generation does **work**, so feel free to use it as you like.
 And if you are just starting out you can probably learn something from it!
