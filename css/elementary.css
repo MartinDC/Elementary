@@ -58,7 +58,7 @@ canvas {
     cursor: crosshair;
     position: absolute;
     color: #f6f6f6;
-
+    
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-crisp-edges;
     image-rendering: pixelated;

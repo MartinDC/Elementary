@@ -31,7 +31,7 @@ export class ElementaryBuffer {
 
     private internalElementSet(row: number, col: number, flag: number) {
         const binaryNumber = flag as ElementaryBinaryNumber;
-        const flatIndex = row * this.generations + col;
+        const flatIndex = row * this.width + col;
 
         if (flatIndex < 0 || flatIndex > this.size) { throw `${this.constructor.name} - Argument out of bounds ${row}, ${col}`; }
         if (binaryNumber != 1 && binaryNumber != 0) { throw `${this.constructor.name} - Flag is not in a correct form. Should be a bit (0 or 1) `; }
@@ -43,7 +43,7 @@ export class ElementaryBuffer {
     }
 
     private internalElementAt(row: number, col: number) {
-        const flatIndex = row * this.generations + col;
+        const flatIndex = row * this.width + col;
         if (flatIndex < 0 || flatIndex > this.size) {
             throw `${this.constructor.name} - Argument out of bounds ${row}, ${col}`;
         }

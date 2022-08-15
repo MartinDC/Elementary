@@ -38,14 +38,14 @@ export class ElementaryConfig {
 export const elementaryConfig: ElementaryConfig = {
     neighbourRules: [7, 6, 5, 4, 3, 2, 1, 0],
 
-    generations: 1000,
+    generations: 2000,
+    width: 2000,
     cellsize: 1,
-    width: 1000,
 
     ratio: false,
     container: '#elementary-container',
     cellcolorOff: '#84d0d4',
-    cellcolorOn: '#575b6b',
+    cellcolorOn: '#374b5b',
 };
 
 declare type ASCIISplashItem = { ending: string; color: string; art: string; };

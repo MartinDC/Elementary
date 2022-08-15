@@ -11,14 +11,14 @@ export class ElementaryDisplay {
         if (!id) { id = 'game-canvas'; }
 
         const [canvas, context] = this.createHDPICanvasElement(config, container, id);
-        this.centerViewIfNeeded(config, context);
+        this.centerAutomataInView(config, context);
 
         this.elementaryconfig = config;
         this.context = context;
         this.canvas = canvas;
     }
 
-    public render(generations: Uint8Array, year: number) {
+    public render(generations: Uint8Array, year: number): void {
         if (!this.elementaryconfig) { throw 'ElemntaryConfig has to be set if the grid should be canvas rendered'; }
         if (!generations) { throw 'Illegal state - Display grid is undefined'; }
 
@@ -63,13 +63,10 @@ export class ElementaryDisplay {
         return [canvas, ctx];
     }
 
-    private centerViewIfNeeded(config: ElementaryConfig, context: CanvasRenderingContext2D) {
-        const panX = config.width < context.canvas.width;
-        const panY = config.generations < context.canvas.height;
-debugger;
-        const translateX = panX ? context.canvas.width / 2 - config.width / 2 : 0;
-        const translateY = panY ? context.canvas.height / 2 - config.generations / 2 : 0;
-        if (translateX > 0) { context.translate(translateX, 0); }
-        if (translateY > 0) { context.translate(0, translateY); }
+    private centerAutomataInView(config: ElementaryConfig, context: CanvasRenderingContext2D): void {
+        const panVertical = config.generations < context.canvas.height;
+        const translateX = context.canvas.width / 2 - config.width / 2;
+        const translateY = context.canvas.height / 2 - config.generations / 2;
+        context.translate(translateX, panVertical ? translateY : 0);
     }
 }
