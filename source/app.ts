@@ -38,8 +38,8 @@ export class ElementaryConfig {
 export const elementaryConfig: ElementaryConfig = {
     neighbourRules: [7, 6, 5, 4, 3, 2, 1, 0],
 
-    generations: 2000,
-    width: 2000,
+    generations: 1000,
+    width: 1000,
     cellsize: 1,
 
     ratio: false,

@@ -1,18 +1,25 @@
 import { ElementaryConfig } from "./app";
 
+declare type Camera = { x: number, y: number; }
+
 export class ElementaryDisplay {
+    private elementaryconfig: ElementaryConfig;
+    public offscreenContext: CanvasRenderingContext2D;
     public context: CanvasRenderingContext2D;
     public canvas: HTMLCanvasElement;
 
-    private elementaryconfig: ElementaryConfig;
+    private cameraSpeed: number = 10.4;
+    private camera: Camera = { x: 0, y: 0 }
 
     public init(config: ElementaryConfig, container?: string, id?: string) {
         if (!container) { container = 'game-view'; }
         if (!id) { id = 'game-canvas'; }
 
-        const [canvas, context] = this.createHDPICanvasElement(config, container, id);
+        const [canvas, context, offscreenContext] = this.initHDPICanvasElement(config, container, id);
         this.centerAutomataInView(config, context);
+        this.registerSystemEvents();
 
+        this.offscreenContext = offscreenContext;
         this.elementaryconfig = config;
         this.context = context;
         this.canvas = canvas;
@@ -31,18 +38,30 @@ export class ElementaryDisplay {
         let cellh = ratio ? this.canvas.height * window.devicePixelRatio / gridheight : configsize;
 
         generations.forEach((cell, gridcell) => {
-            this.context.fillStyle = cell ? this.elementaryconfig.cellcolorOn : this.elementaryconfig.cellcolorOff;
-            this.context.fillRect(gridcell * cellw, year * cellh, cellw, cellh);
+            this.offscreenContext.fillStyle = cell ? this.elementaryconfig.cellcolorOn : this.elementaryconfig.cellcolorOff;
+            this.offscreenContext.fillRect(gridcell * cellw, year * cellh, cellw, cellh);
         });
+
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.drawImage(this.offscreenContext.canvas, this.camera.x, this.camera.y);
     }
 
-    private createHDPICanvasElement(config: ElementaryConfig, container: string, id: string = undefined): [HTMLCanvasElement, CanvasRenderingContext2D] {
+    private initHDPICanvasElement(config: ElementaryConfig, container: string, id: string = undefined): [HTMLCanvasElement, CanvasRenderingContext2D, CanvasRenderingContext2D] {
         const canvascontainer = document.getElementById(container);
+        const [_, offscreenContext] = this.createHDPICanvasElement(config, canvascontainer);
+        const [canvas, context] = this.createHDPICanvasElement(config, canvascontainer);
+
+        if (id) { canvas.id = id; }
+        canvascontainer.appendChild(canvas);
+        return [canvas, context, offscreenContext];
+    }
+
+    private createHDPICanvasElement(config: ElementaryConfig, container?: HTMLElement): [HTMLCanvasElement, CanvasRenderingContext2D] {
         const canvas = document.createElement('canvas') as HTMLCanvasElement;
         const ctx = canvas.getContext('2d');
 
         const devicepixelratio = window.devicePixelRatio || 1;
-        let { width, height } = canvascontainer.getBoundingClientRect();
+        let { width, height } = container?.getBoundingClientRect();
 
         if (!width || !height) {
             width = window.innerWidth;
@@ -57,9 +76,6 @@ export class ElementaryDisplay {
         ctx.imageSmoothingEnabled = false;
         canvas.style.imageRendering = 'pixelated';
         canvas.style.backgroundColor = config.cellcolorOff;
-
-        if (id) { canvas.id = id; }
-        canvascontainer.appendChild(canvas);
         return [canvas, ctx];
     }
 
@@ -68,5 +84,14 @@ export class ElementaryDisplay {
         const translateX = context.canvas.width / 2 - config.width / 2;
         const translateY = context.canvas.height / 2 - config.generations / 2;
         context.translate(translateX, panVertical ? translateY : 0);
+    }
+
+    private registerSystemEvents(): void {
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() == 'w') { this.camera.y += this.cameraSpeed; }
+            if (e.key.toLowerCase() == 's') { this.camera.y -= this.cameraSpeed; }
+            if (e.key.toLowerCase() == 'a') { this.camera.x -= this.cameraSpeed; }
+            if (e.key.toLowerCase() == 'd') { this.camera.x += this.cameraSpeed; }
+        });
     }
 }
