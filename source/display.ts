@@ -8,6 +8,10 @@ export class ElementaryDisplay {
     public context: CanvasRenderingContext2D;
     public canvas: HTMLCanvasElement;
 
+    private isMouseDown: boolean = false;
+    private lastMouse: Camera = { x: 0, y: 0 };
+    private mouse: Camera = { x: 0, y: 0 };
+
     private cameraSpeed: number = 10.4;
     private camera: Camera = { x: 0, y: 0 }
 
@@ -16,7 +20,7 @@ export class ElementaryDisplay {
         if (!id) { id = 'game-canvas'; }
 
         const [canvas, context, offscreenContext] = this.initHDPICanvasElement(config, container, id);
-        this.centerAutomataInView(config, context);
+        this.centerAutomataInView(config, offscreenContext);
         this.registerSystemEvents();
 
         this.offscreenContext = offscreenContext;
@@ -42,8 +46,9 @@ export class ElementaryDisplay {
             this.offscreenContext.fillRect(gridcell * cellw, year * cellh, cellw, cellh);
         });
 
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.drawImage(this.offscreenContext.canvas, this.camera.x, this.camera.y);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // TODO: Clear does follow translate, so trails will be left?
+        this.context.drawImage(this.offscreenContext.canvas, 0, 0);
+        this.context.translate(this.camera.x, this.camera.y);
     }
 
     private initHDPICanvasElement(config: ElementaryConfig, container: string, id: string = undefined): [HTMLCanvasElement, CanvasRenderingContext2D, CanvasRenderingContext2D] {
@@ -80,6 +85,8 @@ export class ElementaryDisplay {
     }
 
     private centerAutomataInView(config: ElementaryConfig, context: CanvasRenderingContext2D): void {
+        if (!config.center) { return; }
+
         const panVertical = config.generations < context.canvas.height;
         const translateX = context.canvas.width / 2 - config.width / 2;
         const translateY = context.canvas.height / 2 - config.generations / 2;
@@ -87,9 +94,24 @@ export class ElementaryDisplay {
     }
 
     private registerSystemEvents(): void {
+        const validateBounds = () => {
+            const appropriateWidth = this.elementaryconfig.width * this.elementaryconfig.cellsize;
+            const appropriateHeight = this.elementaryconfig.generations * this.elementaryconfig.cellsize;
+
+            if (this.camera.x < 0) { this.camera.x = 0; }
+            if (this.camera.y < 0) { this.camera.y = 0; }
+
+            if (this.camera.x > appropriateWidth) { this.camera.x = appropriateWidth; }
+            if (this.camera.y > appropriateHeight) { this.camera.y = appropriateHeight; }
+        };
+
+        document.addEventListener('mousemove', (e) => this.mouse = { x: e.offsetX, y: e.offsetY });
+        document.addEventListener('mousedown', (_) => this.isMouseDown = true);
+        document.addEventListener('mouseup', (_) => this.isMouseDown = false);
+
         document.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() == 'w') { this.camera.y += this.cameraSpeed; }
-            if (e.key.toLowerCase() == 's') { this.camera.y -= this.cameraSpeed; }
+            if (e.key.toLowerCase() == 'w') { this.camera.y -= this.cameraSpeed; }
+            if (e.key.toLowerCase() == 's') { this.camera.y += this.cameraSpeed; }
             if (e.key.toLowerCase() == 'a') { this.camera.x -= this.cameraSpeed; }
             if (e.key.toLowerCase() == 'd') { this.camera.x += this.cameraSpeed; }
         });

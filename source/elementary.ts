@@ -29,15 +29,32 @@ export class Elementary {
      * Animate the step colculation, run untill specified amount of generations has passed.
      */
     animate(onSuccess: (generations: Uint8Array, year: number) => void) {
-        const tick = () => {
+        const start = window.performance.now();
+        const simplePerformanceMonitor = {
+            frameTime: 0, lastTime: 0
+        };
+
+        const tick = (delta: DOMHighResTimeStamp) => {
             const grid = this.step(this.currentGeneration());
-            let nextGeneration = this.generationBuffer.age < this.elementaryConfig.generations - 1;
-            if (nextGeneration) { window.requestAnimationFrame(tick); }
+            const nextGeneration = this.generationBuffer.age < this.elementaryConfig.generations - 1;
+            if (this.elementaryConfig.camera || nextGeneration) { window.requestAnimationFrame(tick); }
             if (this.animationStyle === AnimationStyle.Stepwise) {
                 onSuccess(grid, this.generationBuffer.age);
             }
+            monitorStatistics(delta);
         };
 
+        const monitorStatistics = (delta: DOMHighResTimeStamp) => {
+            const elapsed = delta - start;
+            simplePerformanceMonitor.frameTime += elapsed - simplePerformanceMonitor.lastTime;
+            if (simplePerformanceMonitor.frameTime > 1000) {
+                console.log(`[Frame] : ${simplePerformanceMonitor.frameTime}`);
+                console.log(`[Generations] : ${this.generationBuffer.age}/${this.elementaryConfig.generations}`);
+                simplePerformanceMonitor.frameTime = 0;
+            }
+            simplePerformanceMonitor.lastTime = elapsed;
+        }
+        
         window.requestAnimationFrame(tick);
         if (this.animationStyle === AnimationStyle.Direct) {
             onSuccess(this.generationBuffer.buffer, this.elementaryConfig.generations);
@@ -53,7 +70,7 @@ export class Elementary {
         for (let gridcell = 0; gridcell < this.elementaryConfig.width; gridcell++) {
             const n = this.neighbours(currentGeneratingGrid, gridcell);
             if (!n && n < 0) { throw `Illegal state: ${gridcell}`; }
-            
+
             this.generationBuffer.set(year, gridcell, this.rule(n));
         }
         return currentGeneratingGrid;
@@ -72,6 +89,7 @@ export class Elementary {
     }
 
     rule(index: number) { return this.ruleset[this.elementaryConfig.neighbourRules[index]]; }
+    simulationCompleted() { return this.generationBuffer.age >= this.elementaryConfig.generations - 1; }
     generation(year?: number) { return this.generationBuffer.generation(year); }
     currentGeneration() { return this.generationBuffer.currentGeneration(); }
 
