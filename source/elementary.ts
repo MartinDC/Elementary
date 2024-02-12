@@ -34,6 +34,7 @@ export class Elementary {
             frameTime: 0, lastTime: 0
         };
 
+        // TODO separate logic and render ticks, so that we can continue to pan after simulation
         const tick = (delta: DOMHighResTimeStamp) => {
             const grid = this.step(this.currentGeneration());
             const nextGeneration = this.generationBuffer.age < this.elementaryConfig.generations - 1;
@@ -67,7 +68,7 @@ export class Elementary {
     */
     step(currentGeneratingGrid: Uint8Array): Uint8Array {
         const year = this.generationBuffer.age + 1;
-        for (let gridcell = 0; gridcell < this.elementaryConfig.width; gridcell++) {
+        for (let gridcell = 1; gridcell < this.elementaryConfig.width - 1; gridcell++) {
             const n = this.neighbours(currentGeneratingGrid, gridcell);
             if (!n && n < 0) { throw `Illegal state: ${gridcell}`; }
 
@@ -81,10 +82,12 @@ export class Elementary {
     * @param currentGeneratingGrid  The row in the generation currently beeing generated
      */
     neighbours(currentGeneratingGrid: Uint8Array, cell: number) {
-        if (cell < 0 || cell > this.elementaryConfig.width) { return 0; }
+        if (cell < 0 || cell > this.elementaryConfig.width) { 
+            throw 'Out of cell range for neighbours() call';
+         }
 
-        const r = currentGeneratingGrid[cell + 1 >= this.elementaryConfig.width ? 0 : cell + 1];
-        const l = currentGeneratingGrid[cell - 1 <= 0 ? 0 : cell - 1];
+        const r = currentGeneratingGrid[cell + 1 >= this.elementaryConfig.width ? currentGeneratingGrid.at(0) : cell + 1];
+        const l = currentGeneratingGrid[cell - 1 <= 0 ? currentGeneratingGrid.at(-1) : cell - 1];
         return 0xf & (r << 2 | currentGeneratingGrid[cell] << 1 | l);
     }
 

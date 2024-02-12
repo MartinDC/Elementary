@@ -46,7 +46,7 @@ export class ElementaryDisplay {
             this.offscreenContext.fillRect(gridcell * cellw, year * cellh, cellw, cellh);
         });
 
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // TODO: Clear does follow translate, so trails will be left?
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.drawImage(this.offscreenContext.canvas, 0, 0);
         this.context.translate(this.camera.x, this.camera.y);
     }
@@ -88,9 +88,9 @@ export class ElementaryDisplay {
         if (!config.center) { return; }
 
         const panVertical = config.generations < context.canvas.height;
-        const translateX = context.canvas.width / 2 - config.width / 2;
+        const translateX = context.canvas.width / 2 - config.width / 2 * config.cellsize;
         const translateY = context.canvas.height / 2 - config.generations / 2;
-        context.translate(translateX, panVertical ? translateY : 0);
+        context.translate(translateX, panVertical ? translateY -0.5 : 0);
     }
 
     private registerSystemEvents(): void {
