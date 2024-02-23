@@ -36,8 +36,8 @@ export class ElementaryBuffer {
         if (flatIndex < 0 || flatIndex > this.size) { throw `${this.constructor.name} - Argument out of bounds ${row}, ${col}`; }
         if (binaryNumber != 1 && binaryNumber != 0) { throw `${this.constructor.name} - Flag is not in a correct form. Should be a bit (0 or 1) `; }
 
-        this.buffer[flatIndex] = flag; // Check if we have reached a higher generation
-        if (row > this.highestGenerationIndex) { // TODO move this to elementary.ts for performance
+        this.buffer[flatIndex] = flag;
+        if (row > this.highestGenerationIndex) {
             this.highestGenerationIndex = row;
         }
     }

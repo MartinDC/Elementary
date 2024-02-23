@@ -68,10 +68,10 @@ export class Elementary {
     */
     step(currentGeneratingGrid: Uint8Array): Uint8Array {
         const year = this.generationBuffer.age + 1;
-        for (let gridcell = 1; gridcell < this.elementaryConfig.width - 1; gridcell++) {
+        for (let gridcell = 1; gridcell < this.elementaryConfig.width -1; gridcell++) {
             const n = this.neighbours(currentGeneratingGrid, gridcell);
             if (!n && n < 0) { throw `Illegal state: ${gridcell}`; }
-
+            
             this.generationBuffer.set(year, gridcell, this.rule(n));
         }
         return currentGeneratingGrid;
@@ -90,6 +90,7 @@ export class Elementary {
         const l = currentGeneratingGrid[cell - 1 <= 0 ? currentGeneratingGrid.at(-1) : cell - 1];
         return 0xf & (r << 2 | currentGeneratingGrid[cell] << 1 | l);
     }
+
 
     rule(index: number) { return this.ruleset[this.elementaryConfig.neighbourRules[index]]; }
     simulationCompleted() { return this.generationBuffer.age >= this.elementaryConfig.generations - 1; }
